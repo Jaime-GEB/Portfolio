@@ -20,7 +20,6 @@ yarn.lock
 Thumbs.db
 
 # Build
-dist/
 build/
 .next/
 
