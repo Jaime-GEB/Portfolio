@@ -41,12 +41,13 @@ const MenuContent = () => {
             sx={{ 
                 position: 'relative', 
                 width: '100%', 
-                height: '100vh', 
+                minHeight: '100vh', 
                 backgroundColor: 'background.default',
-                p: 4,
+                p: { xs: 2, md: 4 },
                 display: 'flex',
                 flexDirection: 'column',
-                overflow: 'hidden',
+                overflowX: 'hidden',
+                overflowY: 'auto',
                 // Fondo con rejilla dinámico según el tema
                 backgroundImage: `
                     linear-gradient(${alpha(isDark ? theme.palette.primary.main : theme.palette.divider, 0.05)} 1px, transparent 1px),
@@ -78,11 +79,12 @@ const MenuContent = () => {
                         alignSelf: 'flex-start',
                         color: 'primary.main',
                         fontFamily: 'Doto',
-                        fontSize: '0.85rem',
+                        fontSize: { xs: '0.8rem', sm: '0.85rem' },
                         letterSpacing: '0.1em',
                         border: '1px solid',
                         borderColor: alpha(theme.palette.primary.main, 0.3),
-                        px: 2,
+                        px: { xs: 0.5, sm: 2 },
+                        py: { xs: 0.5, sm: 1 },
                         '&:hover': {
                             borderColor: 'primary.main',
                             backgroundColor: alpha(theme.palette.primary.main, 0.05),
@@ -90,28 +92,31 @@ const MenuContent = () => {
                         }
                     }}
                 >
-                    {"< RETURN_TO_BASE"}
+                    <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>{"< RETURN_TO_BASE"}</Box>
+                    <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>{"< BACK"}</Box>
                 </Button>
 
-                <Box sx={{ alignSelf: 'flex-start', mt: 1 }}>
+                <Box sx={{ alignSelf: 'flex-start', mt: { xs: 0, md: 1 }, width: '100%' }}>
                     <Typography 
                         variant="body2" 
                         sx={{ 
                             fontFamily: 'monospace', 
                             color: 'primary.main',
-                            fontSize: '1.8rem',
+                            fontSize: { xs: '1rem', sm: '1.43rem', md: '1.8rem' },
                             display: 'flex',
                             alignItems: 'center',
+                            flexWrap: 'wrap',
                             fontWeight: 'bold',
-                            textShadow: isDark ? `0 0 10px ${alpha(theme.palette.primary.main, 0.4)}` : 'none'
+                            textShadow: isDark ? `0 0 10px ${alpha(theme.palette.primary.main, 0.4)}` : 'none',
+                            lineHeight: 1.2
                         }}
                     >
-                        <span style={{ marginRight: '12px', opacity: 0.6 }}>C:\USERS\JAIGOBE\</span>
-                        {displayText}
+                        <Box component="span" sx={{ opacity: 0.6, mr: 1 }}>C:\USERS\JAIGOBE\</Box>
+                        <Box component="span">{displayText}</Box>
                         <span style={{ 
                             display: 'inline-block', 
-                            width: '10px', 
-                            height: '1.2em', 
+                            width: '8px', 
+                            height: '1.1em', 
                             backgroundColor: 'currentColor', 
                             marginLeft: '4px',
                             opacity: showCursor ? 1 : 0 
@@ -143,12 +148,13 @@ const MenuContent = () => {
             {/* Redesigned Footer System Status Bar */}
             <Box 
                 sx={{ 
-                    position: 'absolute', 
+                    position: { xs: 'relative', md: 'absolute' }, 
                     bottom: 0, 
                     left: 0, 
                     right: 0, 
                     p: 2,
-                    px: 4,
+                    px: { xs: 2, md: 4 },
+                    mt: { xs: 4, md: 0 },
                     zIndex: 3,
                     display: 'flex', 
                     flexDirection: 'column',
@@ -159,12 +165,18 @@ const MenuContent = () => {
                     backdropFilter: 'blur(8px)'
                 }}
             >
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                <Box sx={{ 
+                    display: 'flex', 
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    justifyContent: 'space-between', 
+                    alignItems: { xs: 'flex-start', sm: 'center' },
+                    gap: { xs: 1, sm: 0 }
+                }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 2, md: 3 }, flexWrap: 'wrap' }}>
                         <Typography sx={{ fontFamily: 'Datatype', fontSize: '0.75rem', color: 'primary.main', fontWeight: 'bold' }}>
                             SYS_STATUS: OPERATIONAL [OK]
                         </Typography>
-                        <Box sx={{ width: 120 }}>
+                        <Box sx={{ width: { xs: 80, sm: 120 } }}>
                             <LinearProgress 
                                 variant="determinate" 
                                 value={100} 
@@ -176,7 +188,13 @@ const MenuContent = () => {
                                 }} 
                             />
                         </Box>
-                        <Typography sx={{ fontFamily: 'monospace', fontSize: '0.7rem', color: 'text.secondary', opacity: 0.7 }}>
+                        <Typography sx={{ 
+                            fontFamily: 'monospace', 
+                            fontSize: '0.7rem', 
+                            color: 'text.secondary', 
+                            opacity: 0.7,
+                            display: { xs: 'none', md: 'block' } 
+                        }}>
                             0xFF2A_MODE_ROTATION_LIT
                         </Typography>
                     </Box>
@@ -184,12 +202,12 @@ const MenuContent = () => {
                     <Typography 
                         sx={{ 
                             fontFamily: 'Datatype', 
-                            fontSize: '0.75rem', 
+                            fontSize: '0.7rem', 
                             color: 'text.secondary',
                             letterSpacing: '0.1em'
                         }}
                     >
-                        ESTRADA_CORE_NET // v1.0.5 // © 2026
+                        ESTRADA_CORE_NET // © 2026
                     </Typography>
                 </Box>
             </Box>

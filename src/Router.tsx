@@ -9,7 +9,7 @@ const AppRouter = () => {
     return (
         <BrowserRouter basename="/Portfolio">
             <Routes>
-                <Route path="/Portfolio" element={<MainPage />} />
+                <Route path="/" element={<MainPage />} />
                 <Route path="/menu" element={<Menu />} />
             </Routes>
         </BrowserRouter>

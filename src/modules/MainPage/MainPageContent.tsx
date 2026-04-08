@@ -36,11 +36,12 @@ const MainPageContent = () => {
                     minHeight: '100vh',
                     minWidth: '100vw',
                     backgroundColor: 'transparent',
+                    p: { xs: 2, md: 4 },
                     '&:hover': {
                         backgroundColor: 'transparent',
                     }
                 }}>
-                <Box sx={{ textAlign: 'center' }}>
+                <Box sx={{ textAlign: 'center', maxWidth: '90%' }}>
                     <Typography 
                         variant='h1'
                         color='text.secondary'
@@ -49,6 +50,8 @@ const MainPageContent = () => {
                         sx={{ 
                             cursor: 'default',
                             transition: 'color 0.3s ease',
+                            fontSize: { xs: '2.2rem', sm: '3rem', md: '4rem' },
+                            wordBreak: 'break-word',
                             "&:hover": { color: 'primary.main' }
                         }}
                     >
@@ -62,23 +65,28 @@ const MainPageContent = () => {
                         sx={{ 
                             cursor: 'default',
                             transition: 'color 0.3s ease',
+                            fontSize: { xs: '1.2rem', sm: '1.8rem', md: '2.5rem' },
+                            mt: 1,
                             "&:hover": { color: 'primary.main' }
                         }}
                     >
                         {renderSub()}
                     </Typography>
                 </Box>
-                <Box sx={{ justifyContent: 'end', alignItems: 'end', width: '100%', height: '100%' }}>
+                <Box sx={{ position: 'absolute', bottom: { xs: 40, md: 60 }, textAlign: 'center', width: '100%' }}>
                     <Typography 
                         variant='body2'
                         onMouseEnter={onSubEnter}
                         onMouseLeave={onSubLeave}
                         sx={{
                             transition: 'color 0.3s ease',
-                            "&:hover": { color: 'primary.main' }
+                            fontSize: { xs: '0.9rem', md: '1.2rem' },
+                            letterSpacing: '0.2em',
+                            opacity: 0.7,
+                            "&:hover": { color: 'primary.main', opacity: 1 }
                         }}
                     >
-                        Pulsa para continuar
+                        PULSA PARA CONTINUAR
                     </Typography>
                 </Box>
             </Button>

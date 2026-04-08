@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Paper, Link, useTheme, alpha } from '@mui/material';
+import { Box, Typography, Paper, Link, useTheme, alpha, useMediaQuery } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import cvPdf from '../../../../src/utils/Jaime Gómez-Estrada _ Full Stack Developer.pdf';
 import { useGlitchText } from '../../../hooks/useGlitchText';
@@ -14,12 +14,20 @@ const INITIAL_ITEMS = [
 ];
 
 // Áreas desiguales del grid (ampliadas)
-const GRID_AREAS = [
+const GRID_AREAS_DESKTOP = [
     { gridArea: '1 / 1 / 3 / 3' }, // Grande 2x2
     { gridArea: '1 / 3 / 2 / 5' }, // Horizontal 2x1
     { gridArea: '2 / 3 / 4 / 4' }, // Vertical 1x2
     { gridArea: '3 / 1 / 4 / 3' }, // Horizontal 2x1
     { gridArea: '2 / 4 / 4 / 5' }, // Vertical 1x2
+];
+
+const GRID_AREAS_MOBILE = [
+    { gridArea: 'auto' },
+    { gridArea: 'auto' },
+    { gridArea: 'auto' },
+    { gridArea: 'auto' },
+    { gridArea: 'auto' },
 ];
 
 interface MenuItem {
@@ -29,12 +37,28 @@ interface MenuItem {
     desc: string;
 }
 
-const MenuGridItem = ({ item, index, isDark, theme }: { item: MenuItem, index: number, isDark: boolean, theme: any }) => {
+const MenuGridItem = ({ item, index, isDark, theme, isMobile }: { item: MenuItem, index: number, isDark: boolean, theme: any, isMobile: boolean }) => {
     const { 
         renderGlitchedText, 
         handleMouseEnter, 
         handleMouseLeave 
     } = useGlitchText(item.label);
+
+    let labelFontSize = '1.8rem';
+    if (isMobile) {
+        labelFontSize = '1.4rem';
+    } else if (index === 0) {
+        labelFontSize = '3rem';
+    }
+
+    let labelMinHeight = '2.2rem';
+    if (isMobile) {
+        labelMinHeight = 'auto';
+    } else if (index === 0) {
+        labelMinHeight = '3.5rem';
+    }
+
+    const labelMarginBottom = isMobile ? 1 : 2;
 
     return (
         <motion.div
@@ -46,7 +70,10 @@ const MenuGridItem = ({ item, index, isDark, theme }: { item: MenuItem, index: n
                 layout: { type: "spring", stiffness: 200, damping: 25 },
                 opacity: { duration: 0.5 }
             }}
-            style={{ ...GRID_AREAS[index], display: 'flex' }}
+            style={{ 
+                ...(isMobile ? GRID_AREAS_MOBILE[index] : GRID_AREAS_DESKTOP[index]), 
+                display: 'flex' 
+            }}
         >
             <Paper
                 elevation={0}
@@ -68,7 +95,8 @@ const MenuGridItem = ({ item, index, isDark, theme }: { item: MenuItem, index: n
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    p: 4,
+                    p: { xs: 2.5, sm: 3, md: 4 },
+                    minHeight: { xs: '120px', md: '100%' },
                     cursor: 'pointer',
                     overflow: 'hidden',
                     position: 'relative',
@@ -101,13 +129,13 @@ const MenuGridItem = ({ item, index, isDark, theme }: { item: MenuItem, index: n
                     className="item-label"
                     variant="h2"
                     sx={{
-                        fontSize: index === 0 ? '3rem' : '1.8rem',
+                        fontSize: labelFontSize,
                         textAlign: 'center',
                         transition: 'all 0.4s ease',
                         color: 'text.primary',
-                        mb: 2,
+                        mb: labelMarginBottom,
                         fontWeight: 'bold',
-                        minHeight: index === 0 ? '3.5rem' : '2.2rem',
+                        minHeight: labelMinHeight,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center'
@@ -154,6 +182,7 @@ const MenuGridItem = ({ item, index, isDark, theme }: { item: MenuItem, index: n
 
 const MenuGrid = () => {
     const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const isDark = theme.palette.mode === 'dark';
     const [items, setItems] = useState(INITIAL_ITEMS);
 
@@ -177,12 +206,12 @@ const MenuGrid = () => {
         <Box 
             sx={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gridTemplateRows: 'repeat(3, 220px)',
-                gap: 3,
+                gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(4, 1fr)' },
+                gridTemplateRows: { xs: 'auto', md: 'repeat(3, 220px)' },
+                gap: { xs: 2, md: 3 },
                 width: '100%',
                 maxWidth: '1200px',
-                padding: 4
+                padding: { xs: 0, sm: 2, md: 4 }
             }}
         >
             <AnimatePresence mode="popLayout">
@@ -193,6 +222,7 @@ const MenuGrid = () => {
                         index={index} 
                         isDark={isDark} 
                         theme={theme} 
+                        isMobile={isMobile}
                     />
                 ))}
             </AnimatePresence>

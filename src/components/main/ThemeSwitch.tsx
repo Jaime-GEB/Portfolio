@@ -37,7 +37,7 @@ const ThemeToggle = () => {
                 display: "flex",
                 alignItems: "center",
                 gap: 2,
-                padding: "8px 16px",
+                padding: { xs: "3px 6px", sm: "8px 16px" },
                 border: "1px solid",
                 borderColor: "primary.main",
                 borderRadius: "6px",
