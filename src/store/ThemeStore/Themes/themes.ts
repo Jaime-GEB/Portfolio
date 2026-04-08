@@ -141,12 +141,12 @@ export const lightTheme = createTheme({
         },
 
         primary: {
-            main: "#00B3A4",
+            main: "#7DFF00", // Verde terminal (anteriormente secundario)
             contrastText: "#0E1A17",
         },
 
         secondary: {
-            main: "#7DFF00",
+            main: "#00B3A4", // Cian (anteriormente primario)
             contrastText: "#0E1A17",
         },
 

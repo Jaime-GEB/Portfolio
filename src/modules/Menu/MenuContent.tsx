@@ -50,8 +50,8 @@ const MenuContent = () => {
                 overflowY: 'auto',
                 // Fondo con rejilla dinámico según el tema
                 backgroundImage: `
-                    linear-gradient(${alpha(isDark ? theme.palette.primary.main : theme.palette.divider, 0.05)} 1px, transparent 1px),
-                    linear-gradient(90deg, ${alpha(isDark ? theme.palette.primary.main : theme.palette.divider, 0.05)} 1px, transparent 1px)
+                    linear-gradient(${alpha(theme.palette.primary.main, isDark ? 0.05 : 0.08)} 1px, transparent 1px),
+                    linear-gradient(90deg, ${alpha(theme.palette.primary.main, isDark ? 0.05 : 0.08)} 1px, transparent 1px)
                 `,
                 backgroundSize: '40px 40px',
                 '&::after': {
@@ -77,12 +77,12 @@ const MenuContent = () => {
                     onClick={() => navigate('/')}
                     sx={{
                         alignSelf: 'flex-start',
-                        color: 'primary.main',
+                        color: isDark ? 'primary.main' : 'text.primary',
                         fontFamily: 'Doto',
                         fontSize: { xs: '0.8rem', sm: '0.85rem' },
                         letterSpacing: '0.1em',
                         border: '1px solid',
-                        borderColor: alpha(theme.palette.primary.main, 0.3),
+                        borderColor: isDark ? alpha(theme.palette.primary.main, 0.3) : 'primary.main',
                         px: { xs: 0.5, sm: 2 },
                         py: { xs: 0.5, sm: 1 },
                         '&:hover': {
@@ -159,9 +159,9 @@ const MenuContent = () => {
                     display: 'flex', 
                     flexDirection: 'column',
                     gap: 1,
-                    backgroundColor: alpha(theme.palette.background.paper, 0.8),
+                    backgroundColor: alpha(isDark ? theme.palette.background.paper : theme.palette.primary.main, 0.8),
                     borderTop: '1px solid',
-                    borderColor: theme.palette.divider,
+                    borderColor: isDark ? theme.palette.divider : alpha(theme.palette.common.black, 0.1),
                     backdropFilter: 'blur(8px)'
                 }}
             >
@@ -173,7 +173,12 @@ const MenuContent = () => {
                     gap: { xs: 1, sm: 0 }
                 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 2, md: 3 }, flexWrap: 'wrap' }}>
-                        <Typography sx={{ fontFamily: 'Datatype', fontSize: '0.75rem', color: 'primary.main', fontWeight: 'bold' }}>
+                        <Typography sx={{ 
+                            fontFamily: 'Datatype', 
+                            fontSize: '0.75rem', 
+                            color: isDark ? 'primary.main' : 'text.primary', 
+                            fontWeight: 'bold' 
+                        }}>
                             SYS_STATUS: OPERATIONAL [OK]
                         </Typography>
                         <Box sx={{ width: { xs: 80, sm: 120 } }}>
@@ -183,8 +188,11 @@ const MenuContent = () => {
                                 sx={{ 
                                     height: 4, 
                                     borderRadius: 0,
-                                    backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                                    '& .MuiLinearProgress-bar': { backgroundColor: 'primary.main', opacity: 0.8 }
+                                    backgroundColor: alpha(isDark ? theme.palette.primary.main : theme.palette.common.black, 0.1),
+                                    '& .MuiLinearProgress-bar': { 
+                                        backgroundColor: isDark ? 'primary.main' : 'common.black', 
+                                        opacity: 0.8 
+                                    }
                                 }} 
                             />
                         </Box>

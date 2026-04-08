@@ -1,9 +1,11 @@
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography, Button, useTheme } from '@mui/material';
 import BgTxt from './components/BgTxt';
 import { useGlitchText } from '../../hooks/useGlitchText';
 import { useNavigate } from 'react-router-dom';
 
 const MainPageContent = () => {
+    const theme = useTheme();
+    const isDark = theme.palette.mode === 'dark';
     const navigate = useNavigate();
     // Aplicamos el efecto de glitch al nombre principal
     const { 
@@ -82,7 +84,9 @@ const MainPageContent = () => {
                             transition: 'color 0.3s ease',
                             fontSize: { xs: '0.9rem', md: '1.2rem' },
                             letterSpacing: '0.2em',
-                            opacity: 0.7,
+                            opacity: isDark ? 0.7 : 0.9,
+                            color: isDark ? 'text.secondary' : 'text.primary',
+                            fontWeight: isDark ? 400 : 700,
                             "&:hover": { color: 'primary.main', opacity: 1 }
                         }}
                     >

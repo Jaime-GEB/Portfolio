@@ -87,9 +87,9 @@ const MenuGridItem = ({ item, index, isDark, theme, isMobile }: { item: MenuItem
                 sx={{
                     width: '100%',
                     height: '100%',
-                    backgroundColor: isDark ? alpha(theme.palette.background.paper, 0.4) : theme.palette.background.paper,
+                    backgroundColor: isDark ? alpha(theme.palette.background.paper, 0.4) : theme.palette.primary.main,
                     border: '1px solid',
-                    borderColor: theme.palette.divider,
+                    borderColor: isDark ? theme.palette.divider : alpha(theme.palette.common.black, 0.1),
                     borderRadius: '8px',
                     display: 'flex',
                     flexDirection: 'column',

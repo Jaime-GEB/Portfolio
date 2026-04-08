@@ -1,4 +1,4 @@
-import { Box, Typography, keyframes } from "@mui/material";
+import { Box, Typography, keyframes, useTheme, alpha } from "@mui/material";
 import { themeStore } from "../../store/ThemeStore/themeStore";
 import { useEffect } from "react";
 
@@ -14,6 +14,7 @@ const flicker = keyframes`
 `;
 
 const ThemeToggle = () => {
+    const theme = useTheme();
     const { mode, toggleTheme } = themeStore();
 
     useEffect(() => {
@@ -41,8 +42,8 @@ const ThemeToggle = () => {
                 border: "1px solid",
                 borderColor: "primary.main",
                 borderRadius: "6px",
-                backgroundColor: isDark ? "rgba(0, 255, 210, 0.05)" : "rgba(0, 179, 164, 0.05)",
-                boxShadow: `0 0 10px ${isDark ? "rgba(0, 255, 210, 0.1)" : "rgba(0, 179, 164, 0.1)"}`,
+                backgroundColor: isDark ? alpha(theme.palette.primary.main, 0.05) : alpha(theme.palette.primary.main, 0.1),
+                boxShadow: `0 0 10px ${alpha(theme.palette.primary.main, isDark ? 0.1 : 0.05)}`,
                 transition: "all 0.2s ease-in-out",
                 zIndex: 1000,
                 animation: `${flicker} 4s infinite`,
@@ -56,7 +57,7 @@ const ThemeToggle = () => {
                         padding: "1px 3px",
                     },
                     "& .indicator-dot": {
-                        color: "background.default",
+                        backgroundColor: isDark ? "background.default" : "common.white",
                     },
                 },
                 "&::before": {
@@ -97,19 +98,19 @@ const ThemeToggle = () => {
                     fontSize: "0.85rem",
                     letterSpacing: "0.1em",
                     textTransform: "uppercase",
-                    color: "primary.main",
+                    color: isDark ? "primary.main" : "text.primary",
                     display: "flex",
                     alignItems: "center",
                     gap: 1,
                     userSelect: "none",
                 }}
             >
-                SYS_MODE: <span style={{ fontWeight: 900 }}>[{mode.toUpperCase()}]</span>
+                SYS_MODE: <Box component="span" sx={{ fontWeight: 900, color: "primary.main" }}>[{mode.toUpperCase()}]</Box>
             </Typography>
 
             <Box sx={{ 
                 fontSize: '10px', 
-                color: 'primary.main', 
+                color: isDark ? 'primary.main' : 'text.secondary', 
                 opacity: 0.6, 
                 ml: 1,
                 fontFamily: 'monospace' 
