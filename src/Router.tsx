@@ -7,7 +7,7 @@ const Menu = lazy(() => import('./pages/Menu/Menu'));
 //Creamos el router de nuestra aplicación
 const AppRouter = () => {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename="/Portfolio">
             <Routes>
                 <Route path="/" element={<MainPage />} />
                 <Route path="/menu" element={<Menu />} />
