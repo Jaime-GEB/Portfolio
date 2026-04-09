@@ -110,7 +110,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 minHeight: '100vh', 
                 backgroundColor: 'background.default',
                 p: { xs: 2, md: 4 },
-                pb: { xs: 8, md: 12 }, // Extra padding for footer
+                pb: { xs: 12, md: 12 }, // Extra padding for footer
                 display: 'flex',
                 flexDirection: 'column',
                 overflowX: 'hidden',

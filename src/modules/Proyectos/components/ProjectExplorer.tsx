@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { Box, Typography, Paper, alpha, useTheme, useMediaQuery } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import proyectosData from '../../../utils/proyectos.json';
 
 // --- Custom SVGs for a futuristic look (No Material Icons) ---
 
@@ -55,8 +56,28 @@ const ProjectExplorer = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
+    const handleProjectClick = (project: Project) => {
+        // Toggle: si clickeas el mismo proyecto, se cierra
+        if (selectedProject?.nombre === project.nombre) {
+            setSelectedProject(null);
+        } else {
+            setSelectedProject(project);
+        }
+    };
+
     const { t } = useTranslation();
-    const projects = t('proyectos', { returnObjects: true }) as Project[];
+    
+    // Obtener descripciones traducidas desde i18n
+    const descripciones = t('proyectos.descripciones', { returnObjects: true }) as Record<string, string>;
+    
+    // Fusionar datos técnicos (proyectos.json) con descripciones (i18n)
+    const projects = useMemo(() => {
+        return (proyectosData.proyectos as any[]).map(proyecto => ({
+            ...proyecto,
+            descripcion: descripciones[proyecto.nombre] || proyecto.nombre
+        }));
+    }, [descripciones]);
+    
     const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
 
     // Impure values should be held in state with a lazy initializer
@@ -108,21 +129,21 @@ const ProjectExplorer = () => {
             <Box sx={{ 
                 display: 'flex', 
                 flexDirection: { xs: 'column', md: 'row' },
-                gap: 3 
+                gap: { xs: selectedProject ? 1.5 : 2, md: 3 }
             }}>
                 {/* File List */}
                 <Box sx={{ 
-                    flex: selectedProject ? '0 0 40%' : '1 1 100%',
-                    transition: 'flex 0.4s ease'
+                    flex: { xs: '1 1 auto', md: selectedProject ? '0 0 40%' : '1 1 100%' },
+                    transition: 'flex 0.4s ease',
                 }}>
                     <Box sx={{ 
                         display: 'grid', 
                         gridTemplateColumns: { 
-                            xs: '1fr', 
-                            sm: '1fr 1fr', 
+                            xs: selectedProject ? '1fr' : '1fr',
+                            sm: selectedProject ? '1fr 1fr' : '1fr 1fr', 
                             md: selectedProject ? '1fr' : '1fr 1fr 1fr' 
                         }, 
-                        gap: 2 
+                        gap: { xs: selectedProject ? 1 : 2, md: 2 }
                     }}>
                         <AnimatePresence mode="wait">
                             {currentProjects.map((project, index) => {
@@ -130,63 +151,160 @@ const ProjectExplorer = () => {
                                 const baseBgColor = isDark ? theme.palette.background.paper : '#fff';
                                 
                                 return (
-                                    <motion.div
-                                        key={project.nombre}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        exit={{ opacity: 0, x: 20 }}
-                                        transition={{ delay: index * 0.05 }}
-                                    >
-                                        <Paper
-                                            onClick={() => setSelectedProject(project)}
-                                            sx={{
-                                                p: 2,
-                                                cursor: 'pointer',
-                                                backgroundColor: isSelected
-                                                    ? alpha(accentColor, 0.1) 
-                                                    : alpha(baseBgColor, 0.5),
-                                                border: '1px solid',
-                                                borderColor: isSelected 
-                                                    ? accentColor 
-                                                    : alpha(accentColor, 0.2),
-                                                borderRadius: 0,
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: 2,
-                                                transition: 'all 0.2s ease',
-                                                '&:hover': {
-                                                    borderColor: accentColor,
-                                                    backgroundColor: alpha(accentColor, 0.05),
-                                                    transform: 'translateX(5px)'
-                                                }
-                                            }}
+                                    <Box key={project.nombre} sx={{ gridColumn: { xs: '1 / -1', md: 'auto' }, display: selectedProject && !isSelected ? { xs: 'none', md: 'block' } : 'block' }}>
+                                        <motion.div
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            exit={{ opacity: 0, x: 20 }}
+                                            transition={{ delay: index * 0.05 }}
                                         >
-                                            <FileIcon color={isSelected ? accentColor : alpha(accentColor, 0.6)} />
-                                            <Box>
-                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                                    <Typography sx={{ 
-                                                        fontFamily: 'Doto', 
-                                                        fontWeight: 'bold', 
-                                                        fontSize: '0.9rem',
-                                                        color: isSelected ? accentColor : 'text.primary'
-                                                    }}>
-                                                        {project.nombre.toUpperCase()}.EXE
+                                            <Paper
+                                                onClick={() => handleProjectClick(project)}
+                                                sx={{
+                                                    p: { xs: 1.5, md: 2 },
+                                                    cursor: 'pointer',
+                                                    backgroundColor: isSelected
+                                                        ? alpha(accentColor, 0.1) 
+                                                        : alpha(baseBgColor, 0.5),
+                                                    border: '1px solid',
+                                                    borderColor: isSelected 
+                                                        ? accentColor 
+                                                        : alpha(accentColor, 0.2),
+                                                    borderRadius: 0,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: 2,
+                                                    transition: 'all 0.2s ease',
+                                                    '&:hover': {
+                                                        borderColor: accentColor,
+                                                        backgroundColor: alpha(accentColor, 0.05),
+                                                        transform: 'translateX(5px)'
+                                                    }
+                                                }}
+                                            >
+                                                <FileIcon color={isSelected ? accentColor : alpha(accentColor, 0.6)} />
+                                                <Box>
+                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                        <Typography sx={{ 
+                                                            fontFamily: 'Doto', 
+                                                            fontWeight: 'bold', 
+                                                            fontSize: '0.9rem',
+                                                            color: isSelected ? accentColor : 'text.primary'
+                                                        }}>
+                                                            {project.nombre.toUpperCase()}.EXE
+                                                        </Typography>
+                                                        {project.status?.toLowerCase() === 'privado' || project.status?.toLowerCase() === 'private' ? (
+                                                            <Box 
+                                                                title="Private repository" 
+                                                                sx={{ display: 'flex', alignItems: 'center', opacity: 0.7 }}
+                                                            >
+                                                                <LockIcon color={isSelected ? accentColor : 'currentColor'} />
+                                                            </Box>
+                                                        ) : null}
+                                                    </Box>
+                                                    <Typography variant="caption" sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
+                                                        {t('projects_page.type')}: {project.lenguaje}
                                                     </Typography>
-                                                    {project.status?.toLowerCase() === 'privado' || project.status?.toLowerCase() === 'private' ? (
-                                                        <Box 
-                                                            title="Private repository" 
-                                                            sx={{ display: 'flex', alignItems: 'center', opacity: 0.7 }}
-                                                        >
-                                                            <LockIcon color={isSelected ? accentColor : 'currentColor'} />
-                                                        </Box>
-                                                    ) : null}
                                                 </Box>
-                                                <Typography variant="caption" sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
-                                                    {t('projects_page.type')}: {project.lenguaje}
-                                                </Typography>
-                                            </Box>
-                                        </Paper>
-                                    </motion.div>
+                                            </Paper>
+                                        </motion.div>
+
+                                        {/* Details Pane - Inline in mobile, hidden in desktop */}
+                                        <AnimatePresence>
+                                            {isSelected && isMobile && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: -10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: -10 }}
+                                                    style={{ gridColumn: '1 / -1' }}
+                                                >
+                                                    <Paper sx={{ 
+                                                        p: { xs: 2, md: 3 }, 
+                                                        mt: 1,
+                                                        backgroundColor: alpha(isDark ? theme.palette.background.paper : '#fff', 0.8),
+                                                        borderLeft: `4px solid ${accentColor}`,
+                                                        borderRadius: 0,
+                                                        position: 'relative',
+                                                        overflow: 'auto'
+                                                    }}>
+                                                        {/* Scanner effect line */}
+                                                        <Box sx={{ 
+                                                            position: 'absolute',
+                                                            top: 0, left: 0, right: 0, height: '2px',
+                                                            background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
+                                                            animation: 'scan 4s linear infinite',
+                                                            '@keyframes scan': {
+                                                                '0%': { top: '0%' },
+                                                                '100%': { top: '100%' }
+                                                            }
+                                                        }} />
+
+                                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                                                            <Typography variant="h5" sx={{ fontFamily: 'Doto', fontWeight: 'bold', color: accentColor }}>
+                                                                {project.nombre.toUpperCase()}
+                                                            </Typography>
+                                                            {(project.status?.toLowerCase() === 'privado' || project.status?.toLowerCase() === 'private') && (
+                                                                <Box sx={{ 
+                                                                    display: 'flex', alignItems: 'center', gap: 0.5,
+                                                                    px: 1, py: 0.25,
+                                                                    border: '1px solid', borderColor: 'warning.main',
+                                                                    color: 'warning.main', fontSize: '0.6rem', fontFamily: 'monospace'
+                                                                }}>
+                                                                    <LockIcon color="currentColor" />
+                                                                    PRIVATE
+                                                                </Box>
+                                                            )}
+                                                        </Box>
+
+                                                        <Typography variant="body2" sx={{ 
+                                                            fontFamily: 'monospace', 
+                                                            color: 'text.primary', 
+                                                            mb: 3, 
+                                                            lineHeight: 1.6,
+                                                            whiteSpace: 'pre-line'
+                                                        }}>
+                                                            {project.descripcion.split('. ').join('.\n\n')}
+                                                        </Typography>
+
+                                                        <Box sx={{ mb: 3 }}>
+                                                            <Typography variant="overline" sx={{ color: accentColor, fontWeight: 'bold' }}>{t('projects_page.stack_analysis')}</Typography>
+                                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
+                                                                {project.frameworks.map((fw: string) => (
+                                                                    <Box key={fw} sx={{ 
+                                                                        px: 1.5, py: 0.5, border: '1px solid', borderColor: accentColor,
+                                                                        fontSize: '0.7rem', fontFamily: 'monospace', color: accentColor
+                                                                    }}>
+                                                                        {fw.toUpperCase()}
+                                                                    </Box>
+                                                                ))}
+                                                            </Box>
+                                                        </Box>
+
+                                                        <Box>
+                                                            <Typography variant="overline" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>{t('projects_page.dependency_tree')}</Typography>
+                                                            <Box sx={{ 
+                                                                mt: 1, p: 2, backgroundColor: alpha('#000', 0.1), 
+                                                                border: '1px dashed', borderColor: alpha(accentColor, 0.3),
+                                                                maxHeight: '200px', overflowY: 'auto'
+                                                            }}>
+                                                                {Object.keys(project.dependencias.dependencies || {}).map(dep => (
+                                                                    <Typography key={dep} sx={{ fontFamily: 'monospace', fontSize: '0.7rem', color: 'text.secondary', opacity: 0.8 }}>
+                                                                        {`> ${dep}@${project.dependencias.dependencies[dep]}`}
+                                                                    </Typography>
+                                                                ))}
+                                                            </Box>
+                                                        </Box>
+                                                        
+                                                        <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
+                                                            <Typography sx={{ fontFamily: 'monospace', fontSize: '0.6rem', color: alpha(accentColor, 0.5) }}>
+                                                                {t('projects_page.system_ref')} {systemRef}
+                                                            </Typography>
+                                                        </Box>
+                                                    </Paper>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </Box>
                                 );
                             })}
                         </AnimatePresence>
@@ -253,18 +371,18 @@ const ProjectExplorer = () => {
                     </Box>
                 </Box>
 
-                {/* Details Pane */}
+                {/* Details Pane - Side panel in desktop, hidden in mobile */}
                 <AnimatePresence>
-                    {selectedProject && (
+                    {selectedProject && !isMobile && (
                         <Box
                             component={motion.div}
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: 20 }}
-                            sx={{ flex: '1 1 auto', minWidth: 0 }}
+                            sx={{ flex: '1 1 auto', minWidth: 0, display: { xs: 'none', md: 'block' } }}
                         >
                             <Paper sx={{ 
-                                p: 3, 
+                                p: { xs: 2, md: 3 }, 
                                 height: '100%', 
                                 minHeight: '300px',
                                 backgroundColor: alpha(isDark ? theme.palette.background.paper : '#fff', 0.8),
@@ -309,13 +427,13 @@ const ProjectExplorer = () => {
                                     lineHeight: 1.6,
                                     whiteSpace: 'pre-line'
                                 }}>
-                                    {isMobile ? selectedProject.descripcion.split('. ').join('.\n\n') : selectedProject.descripcion}
+                                    {selectedProject.descripcion}
                                 </Typography>
 
                                 <Box sx={{ mb: 3 }}>
                                     <Typography variant="overline" sx={{ color: accentColor, fontWeight: 'bold' }}>{t('projects_page.stack_analysis')}</Typography>
                                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
-                                        {selectedProject.frameworks.map(fw => (
+                                        {selectedProject.frameworks.map((fw: string) => (
                                             <Box key={fw} sx={{ 
                                                 px: 1.5, py: 0.5, border: '1px solid', borderColor: accentColor,
                                                 fontSize: '0.7rem', fontFamily: 'monospace', color: accentColor

@@ -2,8 +2,8 @@
     "proyectos": [
         {
             "nombre": "practica-pokedex",
-            "descripcion": "Aplicación web moderna creada con React y TypeScript que consume datos externos y utiliza un stack avanzado de UI y estado global. Incluye integración con MUI, React Query, Zustand y TailwindCSS, ofreciendo una interfaz fluida, responsiva y altamente mantenible.",
             "lenguaje": "TypeScript",
+            "status": "public",
             "frameworks": [
                 "React",
                 "Vite"
@@ -43,8 +43,8 @@
         },
         {
             "nombre": "custom_todo",
-            "descripcion": "Aplicación de gestión de tareas desarrollada con React, TypeScript y Vite. Incluye MUI con Date Pickers, estado global con Zustand, enrutado avanzado y un sistema de estilos moderno basado en TailwindCSS.",
             "lenguaje": "TypeScript",
+            "status": "public",
             "frameworks": [
                 "React",
                 "Vite"
@@ -83,8 +83,8 @@
         },  
         {   
             "nombre": "speedtest-api",
-            "descripcion": "Backend experimental desarrollado en TypeScript cuyo objetivo es medir la velocidad de conexión ejecutando pruebas contra un contenedor Docker remoto que expone iperf3. El sistema automatiza tests periódicos, almacena resultados en una base de datos local y expone endpoints documentados con Swagger.",
             "lenguaje": "TypeScript",
+            "status": "private",
             "frameworks": [
                 "Express",
                 "Vite (solo para entorno dev)"            
