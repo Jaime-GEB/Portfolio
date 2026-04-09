@@ -1,37 +1,40 @@
 {
-  "main": {
-    "subtitle": "Desarrollador Web",
-    "click_continue": "PULSA PARA CONTINUAR"
-  },
-  "menu": {
-    "desc_1": "Ver mi código fuente y proyectos técnicos",
-    "desc_2": "Conecta conmigo profesionalmente",
-    "desc_3": "Obtén mi trayectoria profesional completa",
-    "desc_4": "Explora mi portfolio interactivo",
-    "desc_5": "Colaboremos en tu próximo proyecto"
-  },
-  "dashboard": {
-    "return_to_base": "< RETURN_TO_BASE",
-    "back": "< BACK",
-    "click_close": "[ CLICK PARA CERRAR ]",
-    "lng": "[LNG: {{lang}}]",
-    "sys_status": "SYS_STATUS: OPERATIONAL [OK]",
-    "cpu": "CPU_{{percent}}%",
-    "thread_id": "THREAD_ID: {{id}}"
-  },
-  "projects_page": {
-    "file_explorer": "FILE_EXPLORER // C:\\PROJECTS\\REPOSITORY",
-    "total_files": "TOTAL_ARCHIVOS: {{count}}",
-    "type": "TIPO",
-    "stack_analysis": "FRAMEWORKS:",
-    "dependency_tree": "DEPENDENCIAS:",
-    "system_ref": "REFERENCIA_SISTEMA:"
-  },
-  "proyectos": {
-    "descripciones": {
-      "practica-pokedex": "Aplicación web moderna creada con React y TypeScript que consume datos externos y utiliza un stack avanzado de UI y estado global. Incluye integración con MUI, React Query, Zustand y TailwindCSS, ofreciendo una interfaz fluida, responsiva y altamente mantenible.",
-      "custom_todo": "Aplicación de gestión de tareas desarrollada con React, TypeScript y Vite. Incluye MUI con Date Pickers, estado global con Zustand, enrutado avanzado y un sistema de estilos moderno basado en TailwindCSS.",
-      "speedtest-api": "Backend experimental desarrollado en TypeScript cuyo objetivo es medir la velocidad de conexión ejecutando pruebas contra un contenedor Docker remoto que expone iperf3. El sistema automatiza tests periódicos, almacena resultados en una base de datos local y expone endpoints documentados con Swagger."
+    "main": {
+        "subtitle": "Desarrollador Web",
+        "click_continue": "PULSA PARA CONTINUAR"
+    },
+    "menu": {
+        "desc_1": "Ver mi código fuente y proyectos técnicos",
+        "desc_2": "Conecta conmigo profesionalmente",
+        "desc_3": "Obtén mi trayectoria profesional completa",
+        "desc_4": "Explora mi portfolio interactivo",
+        "desc_5": "Colaboremos en tu próximo proyecto"
+    },
+    "dashboard": {
+        "return_to_base": "< RETURN_TO_BASE",
+        "back": "< BACK",
+        "click_close": "[ CLICK PARA CERRAR ]",
+        "lng": "[LNG: {{lang}}]",
+        "sys_status": "SYS_STATUS: OPERATIONAL [OK]",
+        "cpu": "CPU_{{percent}}%",
+        "thread_id": "THREAD_ID: {{id}}"
+    },
+    "projects_page": {
+        "file_explorer": "FILE_EXPLORER // C:\\PROJECTS\\REPOSITORY",
+        "total_files": "TOTAL_ARCHIVOS: {{count}}",
+        "type": "TIPO",
+        "stack_analysis": "FRAMEWORKS:",
+        "dependency_tree": "DEPENDENCIAS:",
+        "system_ref": "REFERENCIA_SISTEMA:"
+    },
+    "proyectos": {
+        "descripciones": {
+            "practica-pokedex": "Aplicación web moderna creada con React y TypeScript que consume datos externos y utiliza un stack avanzado de UI y estado global. Incluye integración con MUI, React Query, Zustand y TailwindCSS, ofreciendo una interfaz fluida, responsiva y altamente mantenible.",
+            "custom_todo": "Aplicación de gestión de tareas desarrollada con React, TypeScript y Vite. Incluye MUI con Date Pickers, estado global con Zustand, enrutado avanzado y un sistema de estilos moderno basado en TailwindCSS.",
+            "speedtest-api": "Backend experimental desarrollado en TypeScript cuyo objetivo es medir la velocidad de conexión ejecutando pruebas contra un contenedor Docker remoto que expone iperf3. El sistema automatiza tests periódicos, almacena resultados en una base de datos local y expone endpoints documentados con Swagger.",
+            "services-frontend": "Portal de servicios para multiples APIs, desarrollado con React, TypeScript y Vite. El proyecto se centra en la integración de MUI para una interfaz moderna, gestión de estado global con Zustand, enrutado avanzado y un sistema de estilos basado en TailwindCSS para una experiencia de usuario fluida y atractiva.",
+            "JGEST-Boilerplate": "Plantilla de proyecto Front-End desarrollada con React, TypeScript y Vite. El frontend utiliza MUI para una interfaz moderna, gestión de estado global con Zustand, enrutado avanzado y TailwindCSS para estilos. Ademas de incluir varias funciones prehechas como Servicios api, hooks y componentes reutilizables."
+
+        }
     }
-  }
 }
