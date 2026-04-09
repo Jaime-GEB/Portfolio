@@ -1,16 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Box, Typography, Paper, Link, useTheme, alpha, useMediaQuery } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
-import cvPdf from '../../../../src/utils/Jaime Gómez-Estrada _ Full Stack Developer.pdf';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import cvPdfEs from '../../../../src/utils/Jaime Gómez-Estrada _ Full Stack Developer.pdf';
+import cvPdfEn from '../../../../src/utils/Jaime Gómez-Estrada _ Full Stack Developer_En.pdf';
 import { useGlitchText } from '../../../hooks/useGlitchText';
 
 // Definición de los elementos del menú
-const INITIAL_ITEMS = [
-    { id: 1, label: "GITHUB", link: "https://github.com/Jaime-GEB", desc: "View my source code and technical projects" },
-    { id: 2, label: "LINKEDIN", link: "https://www.linkedin.com/in/jaime-gómez-estrada-berrouet-2a4894198", desc: "Connect with me professionally" },
-    { id: 3, label: "DOWNLOAD_CV", link: cvPdf, desc: "Get my full professional background" },
-    { id: 4, label: "PROJECTS", link: " /Portfolio/proyectos", desc: "Explore my interactive portfolio" },
-    { id: 5, label: "CONTACT", link: "mailto:jgestrada02@gmail.com", desc: "Let's collaborate on your next project" },
+const BASE_ITEMS = [
+    { id: 1, label: "GITHUB", link: "https://github.com/Jaime-GEB", isExternal: true },
+    { id: 2, label: "LINKEDIN", link: "https://www.linkedin.com/in/jaime-gómez-estrada-berrouet-2a4894198", isExternal: true },
+    { id: 3, label: "DOWNLOAD_CV", link: "", isExternal: true, isDownload: true },
+    { id: 4, label: "PROJECTS", link: "/proyectos", isExternal: false },
+    { id: 5, label: "CONTACT", link: "mailto:jgestrada02@gmail.com", isExternal: false },
 ];
 
 // Áreas desiguales del grid (ampliadas)
@@ -34,7 +37,9 @@ interface MenuItem {
     id: number;
     label: string;
     link: string;
-    desc: string;
+    isExternal: boolean;
+    isDownload?: boolean;
+    desc?: string;
 }
 
 const MenuGridItem = ({ item, index, isDark, theme, isMobile }: { item: MenuItem, index: number, isDark: boolean, theme: any, isMobile: boolean }) => {
@@ -43,6 +48,35 @@ const MenuGridItem = ({ item, index, isDark, theme, isMobile }: { item: MenuItem
         handleMouseEnter, 
         handleMouseLeave 
     } = useGlitchText(item.label);
+
+    const [clicked, setClicked] = useState(false);
+    const navigate = useNavigate();
+
+    const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault(); // Prevent immediate navigation
+        
+        // Trigger visual feedback
+        setClicked(true);
+        setTimeout(() => setClicked(false), 400);
+
+        // Delay navigation
+        setTimeout(() => {
+            if (item.isDownload) {
+                const linkObj = document.createElement('a');
+                linkObj.href = item.link;
+                linkObj.download = "Jaime_Gomez_CV.pdf";
+                document.body.appendChild(linkObj);
+                linkObj.click();
+                linkObj.remove();
+            } else if (item.label === 'CONTACT') {
+                globalThis.location.href = item.link;
+            } else if (item.isExternal) {
+                globalThis.open(item.link, '_blank');
+            } else {
+                navigate(item.link.trim());
+            }
+        }, 500);
+    };
 
     let labelFontSize = '1.8rem';
     if (isMobile) {
@@ -59,6 +93,9 @@ const MenuGridItem = ({ item, index, isDark, theme, isMobile }: { item: MenuItem
     }
 
     const labelMarginBottom = isMobile ? 1 : 2;
+    const accentColor = theme.palette.primary.main;
+    const defaultBorderColor = isDark ? theme.palette.divider : alpha(theme.palette.common.black, 0.1);
+    const borderColor = clicked ? accentColor : defaultBorderColor;
 
     return (
         <motion.div
@@ -72,16 +109,38 @@ const MenuGridItem = ({ item, index, isDark, theme, isMobile }: { item: MenuItem
             }}
             style={{ 
                 ...(isMobile ? GRID_AREAS_MOBILE[index] : GRID_AREAS_DESKTOP[index]), 
-                display: 'flex' 
+                display: 'flex',
+                position: 'relative'
             }}
         >
+            {/* Click flash overlay */}
+            {clicked && (
+                <Box
+                    component={motion.div}
+                    initial={{ opacity: 0.6, scale: 1 }}
+                    animate={{ opacity: 0, scale: 1.05 }}
+                    transition={{ duration: 0.35, ease: 'easeOut' }}
+                    sx={{
+                        position: 'absolute',
+                        inset: 0,
+                        zIndex: 10,
+                        borderRadius: '8px',
+                        border: `2px solid ${accentColor}`,
+                        backgroundColor: alpha(accentColor, 0.15),
+                        boxShadow: `0 0 30px ${alpha(accentColor, 0.5)}, inset 0 0 20px ${alpha(accentColor, 0.2)}`,
+                        pointerEvents: 'none'
+                    }}
+                />
+            )}
+
             <Paper
                 elevation={0}
                 component={Link}
                 href={item.link}
                 underline="none"
-                download={item.label === "DOWNLOAD CV" ? "Jaime_Gomez_CV.pdf" : undefined}
-                target={item.label.includes('CV') || item.label.includes('GITHUB') || item.label.includes('LINKEDIN') ? "_blank" : "_self"}
+                download={item.isDownload ? "Jaime_Gomez_CV.pdf" : undefined}
+                target={item.isExternal ? "_blank" : "_self"}
+                onClick={handleClick}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 sx={{
@@ -89,7 +148,7 @@ const MenuGridItem = ({ item, index, isDark, theme, isMobile }: { item: MenuItem
                     height: '100%',
                     backgroundColor: isDark ? alpha(theme.palette.background.paper, 0.4) : theme.palette.primary.main,
                     border: '1px solid',
-                    borderColor: isDark ? theme.palette.divider : alpha(theme.palette.common.black, 0.1),
+                    borderColor: borderColor,
                     borderRadius: '8px',
                     display: 'flex',
                     flexDirection: 'column',
@@ -184,19 +243,32 @@ const MenuGrid = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const isDark = theme.palette.mode === 'dark';
-    const [items, setItems] = useState(INITIAL_ITEMS);
+    const { t, i18n } = useTranslation();
+
+    const cvPdf = i18n.language === 'en' ? cvPdfEn : cvPdfEs;
+
+    const baseItems = useMemo(() => BASE_ITEMS.map(item => ({
+        ...item,
+        link: item.isDownload ? cvPdf : item.link,
+        desc: t(`menu.desc_${item.id}`)
+    })), [cvPdf, t]);
+
+    const [rotation, setRotation] = useState(0);
+
+    // Derived items: apply rotation offset to baseItems
+    const items = useMemo(() => {
+        const rotated = [...baseItems];
+        for (let i = 0; i < rotation; i++) {
+            const first = rotated.shift();
+            if (first) rotated.push(first);
+        }
+        return rotated;
+    }, [baseItems, rotation]);
 
     // Rotación física cada 30 segundos
     useEffect(() => {
         const interval = setInterval(() => {
-            setItems(prev => {
-                const next = [...prev];
-                const first = next.shift();
-                if (first) {
-                    next.push(first);
-                }
-                return next;
-            });
+            setRotation(r => r + 1);
         }, 30000);
 
         return () => clearInterval(interval);

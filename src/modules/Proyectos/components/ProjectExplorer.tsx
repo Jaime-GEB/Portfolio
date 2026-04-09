@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Box, Typography, Paper, alpha, useTheme, useMediaQuery } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
-import projectsData from '../../../utils/proyectos.json';
+import { useTranslation } from 'react-i18next';
 
 // --- Custom SVGs for a futuristic look (No Material Icons) ---
 
@@ -25,6 +25,14 @@ const ChevronRight = ({ color }: { color: string }) => (
     </svg>
 );
 
+const LockIcon = ({ color }: { color: string }) => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="11" width="18" height="11" rx="2" stroke={color} strokeWidth="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+        <circle cx="12" cy="16" r="1.5" fill={color}/>
+    </svg>
+);
+
 // --- Components ---
 
 interface Project {
@@ -33,6 +41,7 @@ interface Project {
     lenguaje: string;
     frameworks: string[];
     dependencias: any;
+    status?: string;
 }
 
 const ITEMS_PER_PAGE = 6;
@@ -46,7 +55,8 @@ const ProjectExplorer = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
-    const projects = projectsData.proyectos as Project[];
+    const { t } = useTranslation();
+    const projects = t('proyectos', { returnObjects: true }) as Project[];
     const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
 
     // Impure values should be held in state with a lazy initializer
@@ -83,7 +93,7 @@ const ProjectExplorer = () => {
                     fontWeight: 'bold',
                     letterSpacing: '0.2em'
                 }}>
-                    FILE_EXPLORER // C:\PROJECTS\REPOSITORY
+                    {t('projects_page.file_explorer')}
                 </Typography>
                 <Typography sx={{ 
                     fontFamily: 'monospace', 
@@ -91,7 +101,7 @@ const ProjectExplorer = () => {
                     color: 'text.secondary',
                     opacity: 0.6
                 }}>
-                    TOTAL_FILES: {projects.length}
+                    {t('projects_page.total_files', { count: projects.length })}
                 </Typography>
             </Box>
 
@@ -153,16 +163,26 @@ const ProjectExplorer = () => {
                                         >
                                             <FileIcon color={isSelected ? accentColor : alpha(accentColor, 0.6)} />
                                             <Box>
-                                                <Typography sx={{ 
-                                                    fontFamily: 'Doto', 
-                                                    fontWeight: 'bold', 
-                                                    fontSize: '0.9rem',
-                                                    color: isSelected ? accentColor : 'text.primary'
-                                                }}>
-                                                    {project.nombre.toUpperCase()}.EXE
-                                                </Typography>
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                    <Typography sx={{ 
+                                                        fontFamily: 'Doto', 
+                                                        fontWeight: 'bold', 
+                                                        fontSize: '0.9rem',
+                                                        color: isSelected ? accentColor : 'text.primary'
+                                                    }}>
+                                                        {project.nombre.toUpperCase()}.EXE
+                                                    </Typography>
+                                                    {project.status?.toLowerCase() === 'privado' || project.status?.toLowerCase() === 'private' ? (
+                                                        <Box 
+                                                            title="Private repository" 
+                                                            sx={{ display: 'flex', alignItems: 'center', opacity: 0.7 }}
+                                                        >
+                                                            <LockIcon color={isSelected ? accentColor : 'currentColor'} />
+                                                        </Box>
+                                                    ) : null}
+                                                </Box>
                                                 <Typography variant="caption" sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
-                                                    TYPE: {project.lenguaje}
+                                                    {t('projects_page.type')}: {project.lenguaje}
                                                 </Typography>
                                             </Box>
                                         </Paper>
@@ -265,9 +285,22 @@ const ProjectExplorer = () => {
                                     }
                                 }} />
 
-                                <Typography variant="h5" sx={{ fontFamily: 'Doto', fontWeight: 'bold', mb: 2, color: accentColor }}>
-                                    {selectedProject.nombre.toUpperCase()}
-                                </Typography>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                                    <Typography variant="h5" sx={{ fontFamily: 'Doto', fontWeight: 'bold', color: accentColor }}>
+                                        {selectedProject.nombre.toUpperCase()}
+                                    </Typography>
+                                    {(selectedProject.status?.toLowerCase() === 'privado' || selectedProject.status?.toLowerCase() === 'private') && (
+                                        <Box sx={{ 
+                                            display: 'flex', alignItems: 'center', gap: 0.5,
+                                            px: 1, py: 0.25,
+                                            border: '1px solid', borderColor: 'warning.main',
+                                            color: 'warning.main', fontSize: '0.6rem', fontFamily: 'monospace'
+                                        }}>
+                                            <LockIcon color="currentColor" />
+                                            PRIVATE
+                                        </Box>
+                                    )}
+                                </Box>
 
                                 <Typography variant="body2" sx={{ 
                                     fontFamily: 'monospace', 
@@ -280,7 +313,7 @@ const ProjectExplorer = () => {
                                 </Typography>
 
                                 <Box sx={{ mb: 3 }}>
-                                    <Typography variant="overline" sx={{ color: accentColor, fontWeight: 'bold' }}>STACK_ANALYSIS:</Typography>
+                                    <Typography variant="overline" sx={{ color: accentColor, fontWeight: 'bold' }}>{t('projects_page.stack_analysis')}</Typography>
                                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
                                         {selectedProject.frameworks.map(fw => (
                                             <Box key={fw} sx={{ 
@@ -294,7 +327,7 @@ const ProjectExplorer = () => {
                                 </Box>
 
                                 <Box>
-                                    <Typography variant="overline" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>DEPENDENCY_TREE:</Typography>
+                                    <Typography variant="overline" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>{t('projects_page.dependency_tree')}</Typography>
                                     <Box sx={{ 
                                         mt: 1, p: 2, backgroundColor: alpha('#000', 0.1), 
                                         border: '1px dashed', borderColor: alpha(accentColor, 0.3),
@@ -310,7 +343,7 @@ const ProjectExplorer = () => {
                                 
                                 <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
                                     <Typography sx={{ fontFamily: 'monospace', fontSize: '0.6rem', color: alpha(accentColor, 0.5) }}>
-                                        SYSTEM_REF: {systemRef}
+                                        {t('projects_page.system_ref')} {systemRef}
                                     </Typography>
                                 </Box>
                             </Paper>

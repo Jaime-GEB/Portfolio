@@ -1,0 +1,152 @@
+{
+  "main": {
+    "subtitle": "Desarrollador Web",
+    "click_continue": "PULSA PARA CONTINUAR"
+  },
+  "menu": {
+    "desc_1": "Ver mi código fuente y proyectos técnicos",
+    "desc_2": "Conecta conmigo profesionalmente",
+    "desc_3": "Obtén mi trayectoria profesional completa",
+    "desc_4": "Explora mi portfolio interactivo",
+    "desc_5": "Colaboremos en tu próximo proyecto"
+  },
+  "dashboard": {
+    "return_to_base": "< RETURN_TO_BASE",
+    "back": "< BACK",
+    "click_close": "[ CLICK PARA CERRAR ]",
+    "lng": "[LNG: {{lang}}]",
+    "sys_status": "SYS_STATUS: OPERATIONAL [OK]",
+    "cpu": "CPU_{{percent}}%",
+    "thread_id": "THREAD_ID: {{id}}"
+  },
+  "projects_page": {
+    "file_explorer": "FILE_EXPLORER // C:\\PROJECTS\\REPOSITORY",
+    "total_files": "TOTAL_ARCHIVOS: {{count}}",
+    "type": "TIPO",
+    "stack_analysis": "FRAMEWORKS:",
+    "dependency_tree": "DEPENDENCIAS:",
+    "system_ref": "REFERENCIA_SISTEMA:"
+  },
+  "proyectos": [
+    {
+        "nombre": "practica-pokedex",
+        "descripcion": "Aplicación web moderna creada con React y TypeScript que consume datos externos y utiliza un stack avanzado de UI y estado global. Incluye integración con MUI, React Query, Zustand y TailwindCSS, ofreciendo una interfaz fluida, responsiva y altamente mantenible.",
+        "lenguaje": "TypeScript",
+        "status": "Publico",
+        "frameworks": [
+            "React",
+            "Vite"
+        ],
+        "dependencias": {
+            "dependencies": {
+                "@emotion/react": "^11.14.0",
+                "@emotion/styled": "^11.14.1",
+                "@mui/icons-material": "^7.3.7",
+                "@mui/material": "^7.3.7",
+                "@tanstack/react-query": "^5.90.17",
+                "axios": "^1.13.2",
+                "react": "^19.2.0",
+                "react-dom": "^19.2.0",
+                "react-router-dom": "^7.12.0",
+                "zustand": "^5.0.10"
+            },
+            "devDependencies": {
+                "@eslint/js": "^9.39.1",
+                "@tailwindcss/vite": "^4.1.18",
+                "@types/node": "^24.10.1",
+                "@types/react": "^19.2.5",
+                "@types/react-dom": "^19.2.3",
+                "@vitejs/plugin-react-swc": "^4.2.2",
+                "autoprefixer": "^10.4.23",
+                "eslint": "^9.39.1",
+                "eslint-plugin-react-hooks": "^7.0.1",
+                "eslint-plugin-react-refresh": "^0.4.24",
+                "globals": "^16.5.0",
+                "postcss": "^8.5.6",
+                "tailwindcss": "^4.1.18",
+                "typescript": "~5.9.3",
+                "typescript-eslint": "^8.46.4",
+                "vite": "^7.2.4"
+            }
+        }
+    },
+    {
+        "nombre": "custom_todo",
+        "descripcion": "Aplicación de gestión de tareas desarrollada con React, TypeScript y Vite. Incluye MUI con Date Pickers, estado global con Zustand, enrutado avanzado y un sistema de estilos moderno basado en TailwindCSS.",
+        "lenguaje": "TypeScript",
+        "status": "Publico",
+        "frameworks": [
+            "React",
+            "Vite"
+        ],
+        "dependencias": {
+            "dependencies": {
+                "@emotion/react": "^11.14.0",
+                "@emotion/styled": "^11.14.1",
+                "@mui/icons-material": "^7.3.7",
+                "@mui/material": "^7.3.7",
+                "@mui/x-date-pickers": "^8.27.0",
+                "@tailwindcss/vite": "^4.1.18",
+                "dayjs": "^1.11.19",
+                "pnpm": "^10.29.3",
+                "react": "^19.2.4",
+                "react-dom": "^19.2.4",
+                "react-router-dom": "^7.13.0",
+                "tailwindcss": "^4.1.18",
+                "zustand": "^5.0.11"
+            },
+            "devDependencies": {
+                "@eslint/js": "^9.39.2",
+                "@types/node": "^24.10.13",
+                "@types/react": "^19.2.14",
+                "@types/react-dom": "^19.2.3",
+                "@vitejs/plugin-react-swc": "^4.2.3",
+                "eslint": "^9.39.2",
+                "eslint-plugin-react-hooks": "^7.0.1",
+                "eslint-plugin-react-refresh": "^0.4.26",
+                "globals": "^16.5.0",
+                "typescript": "~5.9.3",
+                "typescript-eslint": "^8.55.0",
+                "vite": "^7.3.1"
+            }
+        }
+    },  
+    {   
+        "nombre": "speedtest-api",
+        "descripcion": "Backend experimental desarrollado en TypeScript cuyo objetivo es medir la velocidad de conexión ejecutando pruebas contra un contenedor Docker remoto que expone iperf3. El sistema automatiza tests periódicos, almacena resultados en una base de datos local y expone endpoints documentados con Swagger.",
+        "lenguaje": "TypeScript",
+        "status": "Privado",
+        "frameworks": [
+            "Express",
+            "Vite (solo para entorno dev)"            
+        ],
+        "dependencias": {
+            "dependencies": {
+                "axios": "^1.13.5",
+                "better-sqlite3": "^12.6.2",
+                "cors": "^2.8.6",
+                "dotenv": "^17.3.1",
+                "express": "^5.2.1",
+                "fast-speedtest-api": "^0.3.2",
+                "node-cron": "^4.2.1",
+                "swagger-jsdoc": "^6.2.8",
+                "swagger-ui-express": "^5.0.1",
+                "systeminformation": "^5.31.1"
+            },
+            "devDependencies": {
+                "@types/better-sqlite3": "^7.6.13",
+                "@types/cors": "^2.8.19",
+                "@types/express": "^5.0.6",
+                "@types/node": "^25.3.1",
+                "@types/node-cron": "^3.0.11",
+                "@types/swagger-jsdoc": "^6.0.4",
+                "@types/swagger-ui-express": "^4.1.8",
+                "ts-node-dev": "^2.0.0",
+                "tsx": "^4.21.0",
+                "typescript": "~5.9.3",
+                "vite": "^7.3.1"
+            }
+        }
+    }
+  ]
+}

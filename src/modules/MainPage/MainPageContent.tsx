@@ -2,11 +2,14 @@ import { Box, Typography, Button, useTheme } from '@mui/material';
 import BgTxt from './components/BgTxt';
 import { useGlitchText } from '../../hooks/useGlitchText';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const MainPageContent = () => {
     const theme = useTheme();
     const isDark = theme.palette.mode === 'dark';
     const navigate = useNavigate();
+    const { t } = useTranslation();
+
     // Aplicamos el efecto de glitch al nombre principal
     const { 
         renderGlitchedText: renderName, 
@@ -19,7 +22,7 @@ const MainPageContent = () => {
         renderGlitchedText: renderSub,
         handleMouseEnter: onSubEnter,
         handleMouseLeave: onSubLeave
-    } = useGlitchText("Desarrollador Web");
+    } = useGlitchText(t('main.subtitle'));
 
     return (
         <Box sx={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
@@ -90,7 +93,7 @@ const MainPageContent = () => {
                             "&:hover": { color: 'primary.main', opacity: 1 }
                         }}
                     >
-                        PULSA PARA CONTINUAR
+                        {t('main.click_continue')}
                     </Typography>
                 </Box>
             </Button>

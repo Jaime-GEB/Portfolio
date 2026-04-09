@@ -2,6 +2,8 @@ import { useState, useEffect, type ReactNode } from 'react';
 import { Box, Typography, Button, LinearProgress, CircularProgress, useTheme, alpha, InputBase, keyframes } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import { useSoundEffects } from '../hooks/useSoundEffects';
 import ThemeToggle from '../components/main/ThemeSwitch';
 
 interface DashboardLayoutProps {
@@ -18,9 +20,14 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     const [displayText, setDisplayText] = useState("");
     const [showCursor, setShowCursor] = useState(true);
     
+    // i18n
+    const { t, i18n } = useTranslation();
+    
+    const { playYay } = useSoundEffects();
+
     // New States
     const [systemLoad, setSystemLoad] = useState(0);
-    const [language, setLanguage] = useState<'ES' | 'EN'>('ES');
+    const [language, setLanguage] = useState<'ES' | 'EN'>(i18n.language && i18n.language.toLowerCase().startsWith('en') ? 'EN' : 'ES');
     const [easterEgg, setEasterEgg] = useState<{ visible: boolean; image: string } | null>(null);
 
     // Flicker animation for retro progress bar
@@ -81,11 +88,13 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         
         const cleanVal = val.trim().toLowerCase();
         if (cleanVal === 'mondarina') {
+            playYay();
             setEasterEgg({
                 visible: true,
                 image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuB38sD1_UfeYI_Yb10Vm5LH82dsfiCQr2UA&s"
             });
         } else if (cleanVal === 'inade') {
+            playYay();
             setEasterEgg({
                 visible: true,
                 image: "https://ih1.redbubble.net/image.5279114284.8907/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg"
@@ -158,7 +167,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                             style={{ maxWidth: '85%', maxHeight: '85%', borderRadius: '12px', border: `2px solid ${accentColor}` }}
                         />
                         <Typography sx={{ position: 'absolute', bottom: 40, color: 'white', fontFamily: 'Doto', fontSize: '1.2rem', textShadow: '0 0 10px rgba(0,0,0,0.5)' }}>
-                            [ CLICK ANYWHERE TO DISMISS ]
+                            {t('dashboard.click_close')}
                         </Typography>
                     </Box>
                 )}
@@ -185,11 +194,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                         }
                     }}
                 >
-                    <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>{"< RETURN_TO_BASE"}</Box>
-                    <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>{"< BACK"}</Box>
+                    <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>{t('dashboard.return_to_base')}</Box>
+                    <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>{t('dashboard.back')}</Box>
                 </Button>
 
-                <Box sx={{ alignSelf: 'flex-start', mt: { xs: 0, md: 1 }, width: '100%', display: 'flex', alignItems: 'center' }}>
+                <Box sx={{ alignSelf: 'flex-start', mt: { xs: 0, md: 1 }, width: '100%', display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
                     <Typography 
                         variant="body2" 
                         sx={{ 
@@ -213,8 +222,9 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                             color: accentColor,
                             fontSize: { xs: '1rem', sm: '1.43rem', md: '1.8rem' },
                             fontWeight: 'bold',
-                            width: 'auto',
-                            minWidth: '200px',
+                            flex: 1,
+                            maxWidth: '450px',
+                            minWidth: { xs: '150px', sm: '300px' },
                             textShadow: isDark ? `0 0 10px ${alpha(accentColor, 0.4)}` : 'none',
                             '& .MuiInputBase-input': {
                                 padding: 0,
@@ -247,7 +257,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             {/* Language Toggle Fixed */}
             <Box sx={{ position: 'fixed', bottom: { xs: 70, md: 100 }, right: 30, zIndex: 100 }}>
                 <Button
-                    onClick={() => setLanguage(l => l === 'ES' ? 'EN' : 'ES')}
+                    onClick={() => {
+                        const next = language === 'ES' ? 'EN' : 'ES';
+                        setLanguage(next);
+                        i18n.changeLanguage(next.toLowerCase());
+                    }}
                     sx={{
                         fontFamily: 'Datatype',
                         fontSize: '1rem', // Bigger font
@@ -266,7 +280,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                         }
                     }}
                 >
-                    [LNG: {language}]
+                    {t('dashboard.lng', { lang: language })}
                 </Button>
             </Box>
 
@@ -298,7 +312,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                             color: accentColor, 
                             fontWeight: 'bold' 
                         }}>
-                            SYS_STATUS: OPERATIONAL [OK]
+                            {t('dashboard.sys_status')}
                         </Typography>
                         
                         {/* Linear Looping Glitched Progress */}
@@ -333,7 +347,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                                 }}
                             />
                             <Typography sx={{ fontFamily: 'monospace', fontSize: '0.7rem', color: accentColor, fontWeight: 'bold' }}>
-                                CPU_{Math.floor(systemLoad)}%
+                                {t('dashboard.cpu', { percent: Math.floor(systemLoad) })}
                             </Typography>
                         </Box>
 
@@ -344,7 +358,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                             opacity: 0.8,
                             display: { xs: 'none', lg: 'block' } 
                         }}>
-                            THREAD_ID: {Math.floor(systemLoad * 1234).toString(16).toUpperCase()}
+                            {t('dashboard.thread_id', { id: Math.floor(systemLoad * 1234).toString(16).toUpperCase() })}
                         </Typography>
                     </Box>
                     
