@@ -4,7 +4,6 @@ import { ThemeProvider } from '@mui/material/styles';
 import AppRouter from './Router';
 import { themeStore } from './store/ThemeStore/themeStore';
 import { themes } from './store/ThemeStore/Themes/themes';
-import { NotificationProvider } from './providers/NotificationProvider/NotificationProvider';
 import { useSoundEffects } from './hooks/useSoundEffects';
 
 function App() {
@@ -14,7 +13,6 @@ function App() {
   return (
     <ThemeProvider theme={themes[mode]}>
       <CssBaseline />
-      <NotificationProvider>
         <Suspense
           fallback={
             <main className="h-screen w-screen flex justify-center items-center ">
@@ -24,7 +22,6 @@ function App() {
         >
           <AppRouter />
         </Suspense>
-      </NotificationProvider>
     </ThemeProvider>
   )
 }
