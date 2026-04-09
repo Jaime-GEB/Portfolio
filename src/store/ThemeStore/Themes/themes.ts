@@ -131,7 +131,7 @@ export const lightTheme = createTheme({
         mode: "light",
 
         background: {
-            default: "#F4F5F2",
+            default: "#f4f4f4",
             paper: "#E6E8E3",
         },
 

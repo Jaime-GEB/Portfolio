@@ -1,11 +1,11 @@
-import MainLayout from "../../layouts/MainLayout";
+import DashboardLayout from "../../layouts/DashboardLayout";
 import MenuContent from "../../modules/Menu/MenuContent";
 
 const MenuPage = () => {
     return (
-        <MainLayout>
+        <DashboardLayout>
             <MenuContent/>
-        </MainLayout>
+        </DashboardLayout>
     );
 
 }

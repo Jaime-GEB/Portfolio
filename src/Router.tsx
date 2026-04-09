@@ -4,6 +4,7 @@ import { lazy } from 'react';
 //Importamos las paginas de nuestra aplicación de forma lazy para mejorar el rendimiento
 const MainPage = lazy(() => import('./pages/MainPage/MainPage'));
 const Menu = lazy(() => import('./pages/Menu/Menu'));
+const Proyectos = lazy(() => import('./pages/Proyectos/Proyectos'));
 //Creamos el router de nuestra aplicación
 const AppRouter = () => {
     return (
@@ -11,6 +12,7 @@ const AppRouter = () => {
             <Routes>
                 <Route path="/" element={<MainPage />} />
                 <Route path="/menu" element={<Menu />} />
+                <Route path="/proyectos" element={<Proyectos />} />
             </Routes>
         </BrowserRouter>
     );

@@ -9,7 +9,7 @@ const INITIAL_ITEMS = [
     { id: 1, label: "GITHUB", link: "https://github.com/Jaime-GEB", desc: "View my source code and technical projects" },
     { id: 2, label: "LINKEDIN", link: "https://www.linkedin.com/in/jaime-gómez-estrada-berrouet-2a4894198", desc: "Connect with me professionally" },
     { id: 3, label: "DOWNLOAD_CV", link: cvPdf, desc: "Get my full professional background" },
-    { id: 4, label: "PROJECTS", link: " /Portfolio/proyectos", desc: "Explore my interactive portfolio" },
+    { id: 4, label: "PROJECTS", link: "#", desc: "Explore my interactive portfolio" },
     { id: 5, label: "CONTACT", link: "mailto:jgestrada02@gmail.com", desc: "Let's collaborate on your next project" },
 ];
 
