@@ -5,6 +5,7 @@
     src: url('/fonts/Sixtyfour/Sixtyfour-Regular-VariableFont_BLED,SCAN.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -12,18 +13,21 @@
     src: url('/fonts/Bebas_Neue/BebasNeue-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
     font-family: 'Doto';
     src: url('/fonts/Doto/Doto-VariableFont_ROND,wght.ttf') format('truetype');
     font-weight: 100 900;
+    font-display: swap;
 }
 
 @font-face {
     font-family: 'Datatype';
     src: url('/fonts/Datatype/Datatype-VariableFont_wdth,wght.ttf') format('truetype');
     font-weight: 100 900;
+    font-display: swap;
 }
 
 @font-face {
@@ -31,6 +35,7 @@
     src: url('/fonts/BJ_Cree/BJCree-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -38,6 +43,7 @@
     src: url('/fonts/BJ_Cree/BJCree-Medium.ttf') format('truetype');
     font-weight: 500;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -45,6 +51,7 @@
     src: url('/fonts/BJ_Cree/BJCree-SemiBold.ttf') format('truetype');
     font-weight: 600;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -52,6 +59,7 @@
     src: url('/fonts/BJ_Cree/BJCree-Bold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -59,6 +67,7 @@
     src: url('/fonts/LibreBarcode39ExtendedText-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
+    font-display: swap;
 }
 
 html,

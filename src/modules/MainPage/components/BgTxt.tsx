@@ -1,22 +1,62 @@
 import { Box, Typography, keyframes } from "@mui/material";
-import cvData from "../../../utils/cv.json";
+import { useState, useEffect, useMemo } from "react";
 
 // Animation for moving the background text up and down
 const moveUpDown = keyframes`
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(0);
-  }
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0);
+    }
 `;
 
 const BgTxt = () => {
-    // Generate the JSON string once
-    const cvString = JSON.stringify(cvData, null, 2);
+    const [cvString, setCvString] = useState('');
+    
+    // Load cv.json lazily and cache it - only execute once
+    useEffect(() => {
+        let cancelled = false;
+        
+        import("../../../utils/cv.json").then((module) => {
+            if (!cancelled) {
+                const cvData = module.default;
+                setCvString(JSON.stringify(cvData, null, 2));
+            }
+        }).catch(() => {
+            // Gracefully handle import error
+            if (!cancelled) setCvString('');
+        });
+        
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+    
+    // Memoize the rendered Typography to avoid re-rendering when parent updates
+    const typography = useMemo(() => (
+        <Typography 
+            variant='body2' 
+            sx={{ 
+                fontSize: { xs: '2rem', md: '4rem' },
+                fontWeight: 900,
+                lineHeight: 1,
+                color: 'secondary.main',
+                opacity: 0.25,
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-all',
+                textAlign: 'left',
+                width: '120%',
+                animation: `${moveUpDown} 20s ease-in-out infinite`,
+                filter: 'blur(2px)',
+            }}
+        >
+            {cvString}
+        </Typography>
+    ), [cvString]);
 
     return (
         <Box sx={{ 
@@ -32,25 +72,7 @@ const BgTxt = () => {
             display: 'flex',
             justifyContent: 'center'
         }}>
-            <Typography 
-                variant='body2' 
-                sx={{ 
-                    fontSize: { xs: '2rem', md: '4rem' }, // Significantly larger
-                    fontWeight: 900,
-                    lineHeight: 1,
-                    color: 'secondary.main',
-                    opacity: 0.25, // Subtle yet visible
-                    whiteSpace: 'pre-wrap',
-                    wordBreak: 'break-all',
-                    textAlign: 'left',
-                    width: '120%', // Wider to cover movement
-                    animation: `${moveUpDown} 20s ease-in-out infinite`, // Slow smooth animation
-                    filter: 'blur(2px)', // Adds to the "glitch/HUD" depth
-                }}
-            >
-                {/* Repeat enough times to fill space if necessary, but JSON is long enough here */}
-                {cvString}
-            </Typography>
+            {typography}
         </Box>
     );
 };
