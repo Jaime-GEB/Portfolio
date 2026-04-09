@@ -131,8 +131,8 @@ export const lightTheme = createTheme({
         mode: "light",
 
         background: {
-            default: "#f4f4f4",
-            paper: "#E6E8E3",
+            default: "#c5c5c5",
+            paper: "#d4d4d4",
         },
 
         text: {
@@ -172,6 +172,15 @@ export const lightTheme = createTheme({
             styleOverrides: {
                 root: {
                     borderWidth: 1,
+                },
+            },
+        },
+        MuiTypography: {
+            styleOverrides: {
+                root: {
+                    '&.MuiTypography-colorPrimary': {
+                        textShadow: '0 0 2px rgba(0, 0, 0, 0.3)',
+                    },
                 },
             },
         },
