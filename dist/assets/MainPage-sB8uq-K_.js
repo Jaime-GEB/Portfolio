@@ -1,4 +1,4 @@
-import{j as e,r as c,_ as f,k as p,u as v}from"./index-DaCrS0i2.js";import{T as g,a as o,B as s,u as y,b as j,c as b}from"./useTranslation-B6a5iSf1.js";import{u as x}from"./useGlitchText-Dxf1dEkP.js";import"./i18nInstance-B8K6-7Zg.js";const w=({children:r})=>e.jsx("main",{className:"h-screen w-full flex flex-col overflow-hidden",children:e.jsxs("section",{className:"w-full flex-1 min-h-0 flex flex-col",children:[e.jsx(g,{}),r]})}),E=p`
+import{j as e,r as c,_ as f,k as p,u as v}from"./index-liN6VsZL.js";import{T as g,a as o,B as s,u as y,b as j,c as b}from"./useTranslation-DuE4A1qV.js";import{u as x}from"./useGlitchText-CGjxim-D.js";import"./i18nInstance-B8K6-7Zg.js";const w=({children:r})=>e.jsx("main",{className:"h-screen w-full flex flex-col overflow-hidden",children:e.jsxs("section",{className:"w-full flex-1 min-h-0 flex flex-col",children:[e.jsx(g,{}),r]})}),E=p`
     0% {
         transform: translateY(0);
     }
