@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Box, Typography, Paper, alpha, useTheme, useMediaQuery } from '@mui/material';
+import { Box, Typography, Paper, alpha, useTheme, useMediaQuery, Modal, IconButton } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import proyectosData from '../../../utils/proyectos.json';
@@ -34,6 +34,18 @@ const LockIcon = ({ color }: { color: string }) => (
     </svg>
 );
 
+const PlayIcon = ({ color }: { color: string }) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="5 3 19 12 5 21 5 3" fill={color} stroke={color} strokeWidth="1" strokeLinejoin="round"/>
+    </svg>
+);
+
+const CloseIcon = ({ color }: { color: string }) => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 6L6 18M6 6L18 18" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
 // --- Components ---
 
 interface Project {
@@ -43,6 +55,7 @@ interface Project {
     frameworks: string[];
     dependencias: any;
     status?: string;
+    demo?: string;
 }
 
 const ITEMS_PER_PAGE = 6;
@@ -55,6 +68,8 @@ const ProjectExplorer = () => {
 
     const [currentPage, setCurrentPage] = useState(0);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+    const [demoModalOpen, setDemoModalOpen] = useState(false);
+    const [demoProject, setDemoProject] = useState<Project | null>(null);
 
     const handleProjectClick = (project: Project) => {
         // Toggle: si clickeas el mismo proyecto, se cierra
@@ -63,6 +78,18 @@ const ProjectExplorer = () => {
         } else {
             setSelectedProject(project);
         }
+    };
+
+    const handleOpenDemoModal = (project: Project) => {
+        if (project.demo) {
+            setDemoProject(project);
+            setDemoModalOpen(true);
+        }
+    };
+
+    const handleCloseDemoModal = () => {
+        setDemoModalOpen(false);
+        setDemoProject(null);
     };
 
     const { t } = useTranslation();
@@ -201,6 +228,14 @@ const ProjectExplorer = () => {
                                                                 <LockIcon color={isSelected ? accentColor : 'currentColor'} />
                                                             </Box>
                                                         ) : null}
+                                                        {project.demo ? (
+                                                            <Box 
+                                                                title="Has demo" 
+                                                                sx={{ display: 'flex', alignItems: 'center', opacity: 0.7 }}
+                                                            >
+                                                                <PlayIcon color={isSelected ? accentColor : 'currentColor'} />
+                                                            </Box>
+                                                        ) : null}
                                                     </Box>
                                                     <Typography variant="caption" sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
                                                         {t('projects_page.type')}: {project.lenguaje}
@@ -295,10 +330,38 @@ const ProjectExplorer = () => {
                                                             </Box>
                                                         </Box>
                                                         
-                                                        <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
+                                                        <Box sx={{ mt: 4, display: 'flex', gap: 2, justifyContent: 'space-between', alignItems: 'center' }}>
                                                             <Typography sx={{ fontFamily: 'monospace', fontSize: '0.6rem', color: alpha(accentColor, 0.5) }}>
                                                                 {t('projects_page.system_ref')} {systemRef}
                                                             </Typography>
+                                                            {project.demo && (
+                                                                <Box
+                                                                    onClick={() => handleOpenDemoModal(project)}
+                                                                    sx={{
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        gap: 0.5,
+                                                                        px: 1.5,
+                                                                        py: 0.75,
+                                                                        border: '1px solid',
+                                                                        borderColor: accentColor,
+                                                                        backgroundColor: alpha(accentColor, 0.1),
+                                                                        cursor: 'pointer',
+                                                                        transition: 'all 0.2s ease',
+                                                                        fontFamily: 'monospace',
+                                                                        fontSize: '0.7rem',
+                                                                        color: accentColor,
+                                                                        fontWeight: 'bold',
+                                                                        '&:hover': {
+                                                                            backgroundColor: alpha(accentColor, 0.2),
+                                                                            transform: 'scale(1.05)'
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    <PlayIcon color={accentColor} />
+                                                                    DEMO
+                                                                </Box>
+                                                            )}
                                                         </Box>
                                                     </Paper>
                                                 </motion.div>
@@ -459,16 +522,187 @@ const ProjectExplorer = () => {
                                     </Box>
                                 </Box>
                                 
-                                <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
+                                <Box sx={{ mt: 4, display: 'flex', gap: 2, justifyContent: 'space-between', alignItems: 'center' }}>
                                     <Typography sx={{ fontFamily: 'monospace', fontSize: '0.6rem', color: alpha(accentColor, 0.5) }}>
                                         {t('projects_page.system_ref')} {systemRef}
                                     </Typography>
+                                    {selectedProject.demo && (
+                                        <Box
+                                            onClick={() => handleOpenDemoModal(selectedProject)}
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: 0.5,
+                                                px: 1.5,
+                                                py: 0.75,
+                                                border: '1px solid',
+                                                borderColor: accentColor,
+                                                backgroundColor: alpha(accentColor, 0.1),
+                                                cursor: 'pointer',
+                                                transition: 'all 0.2s ease',
+                                                fontFamily: 'monospace',
+                                                fontSize: '0.7rem',
+                                                color: accentColor,
+                                                fontWeight: 'bold',
+                                                '&:hover': {
+                                                    backgroundColor: alpha(accentColor, 0.2),
+                                                    transform: 'scale(1.05)'
+                                                }
+                                            }}
+                                        >
+                                            <PlayIcon color={accentColor} />
+                                            DEMO
+                                        </Box>
+                                    )}
                                 </Box>
                             </Paper>
                         </Box>
                     )}
                 </AnimatePresence>
             </Box>
+
+            {/* Demo Modal */}
+            <AnimatePresence>
+                {demoModalOpen && demoProject && (
+                    <Modal
+                        open={demoModalOpen}
+                        onClose={handleCloseDemoModal}
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backdropFilter: 'blur(5px)',
+                            backgroundColor: alpha('#000', 0.5),
+                        }}
+                    >
+                        <motion.div
+                            initial={{ opacity: 0, scale: 1 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <Box
+                                sx={{
+                                    position: 'relative',
+                                    width: { xs: '95vw', sm: '90vw', md: '85vw', lg: '1000px' },
+                                    maxWidth: '1000px',
+                                    maxHeight: '95vh',
+                                    backgroundColor: isDark ? alpha(theme.palette.background.paper, 0.95) : alpha('#fff', 0.95),
+                                    border: `2px solid ${accentColor}`,
+                                    borderRadius: 0,
+                                    boxShadow: `0 0 50px ${alpha(accentColor, 0.3)}, inset 0 0 20px ${alpha(accentColor, 0.1)}`,
+                                    overflow: 'hidden',
+                                    display: 'flex',
+                                    flexDirection: 'column'
+                                }}
+                            >
+                                {/* Modal Header */}
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        p: 2,
+                                        borderBottom: `1px solid ${alpha(accentColor, 0.3)}`,
+                                        backgroundColor: alpha(accentColor, 0.05)
+                                    }}
+                                >
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                        <PlayIcon color={accentColor} />
+                                        <Typography
+                                            sx={{
+                                                fontFamily: 'Doto',
+                                                fontWeight: 'bold',
+                                                color: accentColor,
+                                                fontSize: '1rem'
+                                            }}
+                                        >
+                                            {demoProject.nombre.toUpperCase()} - DEMO
+                                        </Typography>
+                                    </Box>
+                                    <IconButton
+                                        onClick={handleCloseDemoModal}
+                                        sx={{
+                                            p: 1,
+                                            '&:hover': {
+                                                backgroundColor: alpha(accentColor, 0.2)
+                                            }
+                                        }}
+                                    >
+                                        <CloseIcon color={accentColor} />
+                                    </IconButton>
+                                </Box>
+
+                                {/* Modal Content */}
+                                <Box
+                                    sx={{
+                                        flex: 1,
+                                        overflow: 'auto',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        p: 2
+                                    }}
+                                >
+                                    <iframe
+                                        src={demoProject.demo}
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            minHeight: '500px',
+                                            border: 'none',
+                                            borderRadius: 0
+                                        }}
+                                        title={`${demoProject.nombre} Demo`}
+                                    />
+                                </Box>
+
+                                {/* Modal Footer */}
+                                <Box
+                                    sx={{
+                                        p: 2,
+                                        borderTop: `1px solid ${alpha(accentColor, 0.3)}`,
+                                        backgroundColor: alpha(accentColor, 0.05),
+                                        display: 'flex',
+                                        justifyContent: 'flex-end',
+                                        gap: 1
+                                    }}
+                                >
+                                    <Box
+                                        component="a"
+                                        href={demoProject.demo}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 0.5,
+                                            px: 1.5,
+                                            py: 0.75,
+                                            border: '1px solid',
+                                            borderColor: accentColor,
+                                            backgroundColor: alpha(accentColor, 0.1),
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s ease',
+                                            fontFamily: 'monospace',
+                                            fontSize: '0.7rem',
+                                            color: accentColor,
+                                            fontWeight: 'bold',
+                                            textDecoration: 'none',
+                                            '&:hover': {
+                                                backgroundColor: alpha(accentColor, 0.2),
+                                                transform: 'scale(1.05)'
+                                            }
+                                        }}
+                                    >
+                                        OPEN IN NEW TAB
+                                    </Box>
+                                </Box>
+                            </Box>
+                        </motion.div>
+                    </Modal>
+                )}
+            </AnimatePresence>
         </Box>
     );
 };

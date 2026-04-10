@@ -4,6 +4,7 @@
             "nombre": "practica-pokedex",
             "lenguaje": "TypeScript",
             "status": "public",
+            "demo":"https://jaime-geb.github.io/Practica-Pokedex/",
             "frameworks": [
                 "React",
                 "Vite"
@@ -45,6 +46,7 @@
             "nombre": "custom_todo",
             "lenguaje": "TypeScript",
             "status": "public",
+            "demo":"https://jaime-geb.github.io/MyCustomToDo/Home",
             "frameworks": [
                 "React",
                 "Vite"
