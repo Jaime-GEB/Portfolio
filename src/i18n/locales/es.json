@@ -25,7 +25,10 @@
         "type": "TIPO",
         "stack_analysis": "FRAMEWORKS:",
         "dependency_tree": "DEPENDENCIAS:",
-        "system_ref": "REFERENCIA_SISTEMA:"
+        "system_ref": "REFERENCIA_SISTEMA:",
+        "filter_language": "LENGUAJE",
+        "filter_framework": "TECNOLOGÍA",
+        "all": "TODOS"
     },
     "proyectos": {
         "descripciones": {

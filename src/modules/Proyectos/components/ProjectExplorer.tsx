@@ -8,6 +8,7 @@ import proyectosData from '../../../utils/proyectos.json';
 import ProjectCard from './ProjectCard';
 import ProjectDetails from './ProjectDetails';
 import ProjectPagination from './ProjectPagination';
+import ProjectFilters from './ProjectFilters';
 
 interface Project {
     nombre: string;
@@ -27,8 +28,73 @@ const ProjectExplorer = () => {
     const isDark = theme.palette.mode === 'dark';
     const accentColor = theme.palette.primary.main;
 
+    const { t } = useTranslation();
     const [currentPage, setCurrentPage] = useState(0);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+    
+    // Filter State
+    const [selectedLanguage, setSelectedLanguage] = useState('ALL');
+    const [selectedFramework, setSelectedFramework] = useState('ALL');
+
+    const handleLanguageChange = (lang: string) => {
+        setSelectedLanguage(lang);
+        setCurrentPage(0);
+        setSelectedProject(null);
+    };
+
+    const handleFrameworkChange = (fw: string) => {
+        setSelectedFramework(fw);
+        setCurrentPage(0);
+        setSelectedProject(null);
+    };
+
+    const descripciones = t('proyectos.descripciones', { returnObjects: true }) as Record<string, string>;
+    
+    // Extract unique languages and frameworks
+    const { availableLanguages, availableFrameworks } = useMemo(() => {
+        const langs = new Set<string>();
+        const fws = new Set<string>();
+        
+        (proyectosData.proyectos as any[]).forEach(proyecto => {
+            if (proyecto.lenguaje) langs.add(proyecto.lenguaje);
+            if (proyecto.frameworks) {
+                proyecto.frameworks.forEach((fw: string) => fws.add(fw));
+            }
+        });
+        
+        return {
+            availableLanguages: Array.from(langs).sort(),
+            availableFrameworks: Array.from(fws).sort()
+        };
+    }, []);
+
+    // Process and Filter Projects
+    const filteredProjects = useMemo(() => {
+        let result = (proyectosData.proyectos as any[]).map(proyecto => ({
+            ...proyecto,
+            descripcion: descripciones[proyecto.nombre] || proyecto.nombre
+        }));
+
+        if (selectedLanguage !== 'ALL') {
+            result = result.filter(p => p.lenguaje === selectedLanguage);
+        }
+
+        if (selectedFramework !== 'ALL') {
+            result = result.filter(p => p.frameworks && p.frameworks.includes(selectedFramework));
+        }
+
+        return result;
+    }, [descripciones, selectedLanguage, selectedFramework]);
+    
+
+    const totalPages = Math.ceil(filteredProjects.length / ITEMS_PER_PAGE);
+
+    const [systemRef] = useState(() => `0x${Math.random().toString(16).slice(2, 6).toUpperCase()}`);
+
+    const currentProjects = useMemo(() => {
+        const start = currentPage * ITEMS_PER_PAGE;
+        return filteredProjects.slice(start, start + ITEMS_PER_PAGE);
+    }, [currentPage, filteredProjects]);
 
     const handleProjectClick = (project: Project) => {
         if (selectedProject?.nombre === project.nombre) {
@@ -37,26 +103,6 @@ const ProjectExplorer = () => {
             setSelectedProject(project);
         }
     };
-
-    const { t } = useTranslation();
-    
-    const descripciones = t('proyectos.descripciones', { returnObjects: true }) as Record<string, string>;
-    
-    const projects = useMemo(() => {
-        return (proyectosData.proyectos as any[]).map(proyecto => ({
-            ...proyecto,
-            descripcion: descripciones[proyecto.nombre] || proyecto.nombre
-        }));
-    }, [descripciones]);
-    
-    const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
-
-    const [systemRef] = useState(() => `0x${Math.random().toString(16).slice(2, 6).toUpperCase()}`);
-
-    const currentProjects = useMemo(() => {
-        const start = currentPage * ITEMS_PER_PAGE;
-        return projects.slice(start, start + ITEMS_PER_PAGE);
-    }, [currentPage, projects]);
 
     const handlePageChange = (newPage: number) => {
         if (newPage >= 0 && newPage < totalPages) {
@@ -92,9 +138,20 @@ const ProjectExplorer = () => {
                     color: 'text.secondary',
                     opacity: 0.6
                 }}>
-                    {t('projects_page.total_files', { count: projects.length })}
+                    {t('projects_page.total_files', { count: filteredProjects.length })}
                 </Typography>
             </Box>
+
+            {/* Filters Section */}
+            <ProjectFilters 
+                languages={availableLanguages}
+                frameworks={availableFrameworks}
+                selectedLanguage={selectedLanguage}
+                selectedFramework={selectedFramework}
+                onLanguageChange={handleLanguageChange}
+                onFrameworkChange={handleFrameworkChange}
+                accentColor={accentColor}
+            />
 
             <Box sx={{ 
                 display: 'flex', 
@@ -115,52 +172,68 @@ const ProjectExplorer = () => {
                         }, 
                         gap: { xs: selectedProject ? 1 : 2, md: 2 }
                     }}>
-                        <AnimatePresence mode="wait">
-                            {currentProjects.map((project, index) => {
-                                const isSelected = selectedProject?.nombre === project.nombre;
-                                
-                                return (
-                                    <Box key={project.nombre} sx={{ gridColumn: { xs: '1 / -1', md: 'auto' }, display: selectedProject && !isSelected ? { xs: 'none', md: 'block' } : 'block' }}>
-                                        <ProjectCard 
-                                            project={project}
-                                            isSelected={isSelected}
-                                            onClick={() => handleProjectClick(project)}
-                                            index={index}
-                                            accentColor={accentColor}
-                                            isDark={isDark}
-                                        />
+                        {filteredProjects.length > 0 ? (
+                            <AnimatePresence mode="wait">
+                                {currentProjects.map((project, index) => {
+                                    const isSelected = selectedProject?.nombre === project.nombre;
+                                    
+                                    return (
+                                        <Box key={project.nombre} sx={{ gridColumn: { xs: '1 / -1', md: 'auto' }, display: selectedProject && !isSelected ? { xs: 'none', md: 'block' } : 'block' }}>
+                                            <ProjectCard 
+                                                project={project}
+                                                isSelected={isSelected}
+                                                onClick={() => handleProjectClick(project)}
+                                                index={index}
+                                                accentColor={accentColor}
+                                                isDark={isDark}
+                                            />
 
-                                        {/* Mobile Inline Details */}
-                                        <AnimatePresence>
-                                            {isSelected && isMobile && (
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: -10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: -10 }}
-                                                    style={{ gridColumn: '1 / -1', marginTop: '8px' }}
-                                                >
-                                                    <ProjectDetails 
-                                                        project={project} 
-                                                        accentColor={accentColor} 
-                                                        isDark={isDark} 
-                                                        systemRef={systemRef} 
-                                                    />
-                                                </motion.div>
-                                            )}
-                                        </AnimatePresence>
-                                    </Box>
-                                );
-                            })}
-                        </AnimatePresence>
+                                            {/* Mobile Inline Details */}
+                                            <AnimatePresence>
+                                                {isSelected && isMobile && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0, y: -10 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        exit={{ opacity: 0, y: -10 }}
+                                                        style={{ gridColumn: '1 / -1', marginTop: '8px' }}
+                                                    >
+                                                        <ProjectDetails 
+                                                            project={project} 
+                                                            accentColor={accentColor} 
+                                                            isDark={isDark} 
+                                                            systemRef={systemRef} 
+                                                        />
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+                                        </Box>
+                                    );
+                                })}
+                            </AnimatePresence>
+                        ) : (
+                            <Box sx={{ 
+                                gridColumn: '1 / -1', 
+                                p: 4, 
+                                textAlign: 'center', 
+                                border: '1px dashed', 
+                                borderColor: alpha(accentColor, 0.3) 
+                            }}>
+                                <Typography sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
+                                    NO_PROJECTS_FOUND_FOR_SPECIFIED_FILTERS
+                                </Typography>
+                            </Box>
+                        )}
                     </Box>
 
-                    <ProjectPagination 
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={handlePageChange}
-                        accentColor={accentColor}
-                        isDark={isDark}
-                    />
+                    {filteredProjects.length > ITEMS_PER_PAGE && (
+                        <ProjectPagination 
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                            accentColor={accentColor}
+                            isDark={isDark}
+                        />
+                    )}
                 </Box>
 
                 {/* Desktop Side Panel Details */}

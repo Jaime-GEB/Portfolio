@@ -25,7 +25,10 @@
         "type": "TYPE",
         "stack_analysis": "STACK_ANALYSIS:",
         "dependency_tree": "DEPENDENCY_TREE:",
-        "system_ref": "SYSTEM_REF:"
+        "system_ref": "SYSTEM_REF:",
+        "filter_language": "LANGUAGE",
+        "filter_framework": "TECH_STACK",
+        "all": "ALL"
     },
     "proyectos": {
         "descripciones": {
