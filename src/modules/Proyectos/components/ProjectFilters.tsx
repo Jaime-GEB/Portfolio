@@ -1,4 +1,4 @@
-import { Box, Typography, alpha, useTheme, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Box, alpha, useTheme, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 interface ProjectFiltersProps {
